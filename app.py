@@ -3,12 +3,7 @@ import pickle
 from numbers import Number
 
 import streamlit as st
-import truststore
 from sentence_transformers import SentenceTransformer
-
-
-truststore.inject_into_ssl()
-
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "model.pkl")
