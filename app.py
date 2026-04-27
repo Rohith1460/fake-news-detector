@@ -116,9 +116,13 @@ if verify_clicked:
     prob_fake = float(proba[0])
     prob_real = float(proba[1])
 
-    label_result = "REAL" if pred == 1 else "FAKE"
+    max_prob = max(prob_real, prob_fake)
+    if max_prob < 0.75:
+        label_result = "UNCERTAIN"
+    else:
+        label_result = "REAL" if prob_real > prob_fake else "FAKE"
     confidence = max(prob_real, prob_fake) * 100
-    show_uncertain = confidence < 60
+    show_uncertain = label_result == "UNCERTAIN"
 
 with left_col:
     st.subheader("Result")
@@ -128,7 +132,7 @@ with left_col:
     )
     st.write(f"Confidence: {confidence:.2f}%")
     if verify_clicked and show_uncertain:
-        st.warning("Low confidence / ambiguous input")
+        st.warning("This input is ambiguous or lacks strong evidence")
 
 with right_col:
     render_confidence(confidence)
