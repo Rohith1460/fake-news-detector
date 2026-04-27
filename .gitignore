@@ -3,7 +3,6 @@ __pycache__/
 *.pyc
 .streamlit/
 .cache/
-model.pkl
 vectorizer.pkl
 .DS_Store
 Thumbs.db

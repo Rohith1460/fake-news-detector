@@ -2,7 +2,6 @@ import os
 import pickle
 from numbers import Number
 
-import plotly.graph_objects as go
 import streamlit as st
 import truststore
 from sentence_transformers import SentenceTransformer
@@ -38,28 +37,10 @@ def load_artifacts():
     return model, embedder
 
 
-def make_gauge(confidence: float):
-    color = "#f59e0b" if confidence < 75 else "#dc2626" if confidence < 85 else "#22c55e"
-    fig = go.Figure(
-        go.Indicator(
-            mode="gauge+number",
-            value=confidence,
-            number={"suffix": "%", "font": {"color": "#f8fafc"}},
-            title={"text": "Trust Score", "font": {"color": "#f8fafc"}},
-            gauge={
-                "axis": {"range": [0, 100], "tickcolor": "#f8fafc"},
-                "bar": {"color": color},
-                "bgcolor": "#111827",
-                "steps": [
-                    {"range": [0, 75], "color": "#3f3a16"},
-                    {"range": [75, 85], "color": "#3f1d1d"},
-                    {"range": [85, 100], "color": "#163323"},
-                ],
-            },
-        )
-    )
-    fig.update_layout(height=300, margin=dict(l=20, r=20, t=40, b=20), paper_bgcolor="#0b1020")
-    return fig
+def render_confidence(confidence: float):
+    st.subheader("Trust Score")
+    st.metric("Confidence", f"{confidence:.2f}%")
+    st.progress(max(0, min(100, int(round(confidence)))) / 100)
 
 
 def status_color(label: str) -> str:
@@ -155,4 +136,4 @@ with left_col:
         st.warning("Low confidence / ambiguous input")
 
 with right_col:
-    st.plotly_chart(make_gauge(confidence), width="stretch")
+    render_confidence(confidence)
